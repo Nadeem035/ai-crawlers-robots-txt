@@ -1,0 +1,18 @@
+# Block AI training crawlers; allow AI search, user-triggered fetches and normal search engines.
+# Source and updates: https://github.com/Nadeem035/ai-crawlers-robots-txt
+# Check the result: https://seopeck.com/tool/ai-crawler-checker
+
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: Meta-ExternalAgent
+User-agent: CCBot
+User-agent: Bytespider
+Disallow: /
+
+User-agent: *
+Allow: /
+
+# Replace with your own sitemap address.
+Sitemap: https://example.com/sitemap.xml

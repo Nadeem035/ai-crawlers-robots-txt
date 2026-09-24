@@ -1,0 +1,9 @@
+# Allow all crawlers, including AI crawlers.
+# Source and updates: https://github.com/Nadeem035/ai-crawlers-robots-txt
+# Check the result: https://seopeck.com/tool/ai-crawler-checker
+
+User-agent: *
+Allow: /
+
+# Replace with your own sitemap address.
+Sitemap: https://example.com/sitemap.xml

@@ -1,0 +1,26 @@
+# Block every AI crawler in the list (training, search and user-triggered); keep normal search engines.
+# Note: your pages will no longer appear as sources in these assistants' answers.
+# Source and updates: https://github.com/Nadeem035/ai-crawlers-robots-txt
+# Check the result: https://seopeck.com/tool/ai-crawler-checker
+
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Meta-ExternalAgent
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: *
+Allow: /
+
+# Replace with your own sitemap address.
+Sitemap: https://example.com/sitemap.xml
