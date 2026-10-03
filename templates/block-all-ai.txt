@@ -17,6 +17,8 @@ User-agent: Meta-ExternalAgent
 User-agent: CCBot
 User-agent: Bytespider
 User-agent: Amazonbot
+User-agent: Amzn-SearchBot
+User-agent: Amzn-User
 Disallow: /
 
 User-agent: *
