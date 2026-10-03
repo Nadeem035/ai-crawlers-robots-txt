@@ -20,12 +20,14 @@ A maintained list of the crawlers AI companies use, what each one is for, and re
 
 Not every AI crawler does the same job, and the difference matters when you decide what to block.
 
-| Kind | What it does | Example tokens | If you block it |
+| Kind (`kind` in the JSON) | What it does | Example tokens | If you block it |
 |---|---|---|---|
-| **Training** | Collects content to train or improve AI models | `GPTBot`, `ClaudeBot`, `CCBot`, `Meta-ExternalAgent` | Your future content stays out of new training data. Content collected earlier is not removed. |
-| **Search / index** | Finds pages to show and cite in AI search answers | `OAI-SearchBot`, `Claude-SearchBot`, `PerplexityBot` | Your pages stop appearing as sources in that assistant's answers. |
-| **User-triggered** | Fetches a page because a user asked the assistant to | `ChatGPT-User`, `Claude-User`, `Perplexity-User` | The assistant cannot open your page when a user shares or asks about it. |
-| **Control token** | Not a separate crawler; a name you can target in robots.txt to control AI use | `Google-Extended`, `Applebot-Extended` | Opts out of that company's AI uses without affecting its normal search crawler. |
+| **Training** (`training`) | Collects content to train or improve AI models | `GPTBot`, `ClaudeBot`, `CCBot`, `Meta-ExternalAgent`, `Amazonbot`, plus the control tokens `Google-Extended` and `Applebot-Extended`\* | Your future content stays out of new training data. Content collected earlier is not removed. |
+| **Search** (`search`) | Finds pages to show and cite in AI search answers | `OAI-SearchBot`, `Claude-SearchBot`, `PerplexityBot` | Your pages stop appearing as sources in that assistant's answers. |
+| **User-triggered** (`user`) | Fetches a page because a user asked the assistant to | `ChatGPT-User`, `Claude-User`, `Perplexity-User` | The assistant cannot open your page when a user shares or asks about it. |
+| **Search engine** (`engine`) | Normal web search crawlers, listed for comparison only | `Googlebot`, `Bingbot` | You disappear from that search engine. Do not block these to opt out of AI. |
+
+\* `Google-Extended` and `Applebot-Extended` are **control tokens, not crawlers**: no bot visits your site with these names. Google and Apple crawl with `Googlebot` and `Applebot` and check these tokens to decide whether your content may be used for AI. Blocking them opts you out of those AI uses without affecting normal search. They are grouped under Training because that is what blocking them controls; `crawlers.json` marks them with `"control_token": true`.
 
 A common middle ground for publishers: **block training, allow search and user-triggered crawlers**, so you keep citations and visits.
 
@@ -39,16 +41,16 @@ A common middle ground for publishers: **block training, allow search and user-t
 | `ClaudeBot` | Anthropic | Training | Collects content to train Claude models | [Anthropic crawlers](https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler) |
 | `Claude-SearchBot` | Anthropic | Search | Finds pages to improve Claude's search results | [Anthropic crawlers](https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler) |
 | `Claude-User` | Anthropic | User-triggered | Fetches a page when a Claude user asks for it | [Anthropic crawlers](https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler) |
-| `Google-Extended` | Google | Control token | Controls use of your content for Gemini training and grounding; does not affect Google Search | [Google crawlers](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers) |
-| `Applebot-Extended` | Apple | Control token | Controls use of your content to train Apple's AI models; does not affect Applebot | [About Applebot](https://support.apple.com/en-us/119829) |
+| `Google-Extended` | Google | Training (control token) | Controls use of your content for Gemini training and grounding; does not affect Google Search | [Google crawlers](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers) |
+| `Applebot-Extended` | Apple | Training (control token) | Controls use of your content to train Apple's AI models; does not affect Applebot | [About Applebot](https://support.apple.com/en-us/119829) |
 | `PerplexityBot` | Perplexity | Search | Indexes pages for Perplexity's answers | [Perplexity crawlers](https://docs.perplexity.ai/guides/bots) |
 | `Perplexity-User` | Perplexity | User-triggered | Fetches a page when a Perplexity user asks for it | [Perplexity crawlers](https://docs.perplexity.ai/guides/bots) |
 | `Meta-ExternalAgent` | Meta | Training | Collects content to train Meta's AI models | Meta's web crawler documentation |
-| `CCBot` | Common Crawl | Training (indirect) | Builds the open Common Crawl dataset, which many AI models are trained on | [CCBot](https://commoncrawl.org/ccbot) |
+| `CCBot` | Common Crawl | Training | Builds the open Common Crawl dataset, which many AI models are trained on | [CCBot](https://commoncrawl.org/ccbot) |
 | `Bytespider` | ByteDance | Training | Collects content for ByteDance, including AI training | — |
-| `Amazonbot` | Amazon | Search / assistant | Crawls for Amazon services, including Alexa answers | [Amazonbot](https://developer.amazon.com/amazonbot) |
+| `Amazonbot` | Amazon | Training | Collects content to improve Amazon's products and services; Amazon says it may be used to train Amazon AI models. Search experiences such as Alexa use a separate token, `Amzn-SearchBot` | [Amazonbot](https://developer.amazon.com/amazonbot) |
 
-For comparison, the two main search engine crawlers: `Googlebot` ([docs](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers)) and `Bingbot` ([docs](https://www.bing.com/webmasters/help/which-crawlers-does-bing-use-8c184ec0)). Bing's index also powers Copilot answers. Blocking either removes you from that search engine.
+For comparison, the two main search engine crawlers (kind `engine`, not in `crawlers.json` so that a script blocking every entry never blocks search): `Googlebot` ([docs](https://developers.google.com/search/docs/crawling-indexing/google-common-crawlers)) and `Bingbot` ([docs](https://www.bing.com/webmasters/help/which-crawlers-does-bing-use-8c184ec0)). Bing's index also powers Copilot answers. Blocking either removes you from that search engine.
 
 > Operators add and rename crawlers from time to time. Always confirm against the official docs before relying on a rule. Pull requests with updates are welcome.
 
@@ -72,6 +74,7 @@ User-agent: Applebot-Extended
 User-agent: Meta-ExternalAgent
 User-agent: CCBot
 User-agent: Bytespider
+User-agent: Amazonbot
 Disallow: /
 
 User-agent: *
@@ -106,7 +109,7 @@ Longer explanation with examples: [Should you block AI crawlers? A plain guide t
 
 ## Machine-readable list
 
-[`crawlers.json`](crawlers.json) contains the same list as the table above (token, operator, kind, purpose, docs URL), for use in scripts, server rules or your own tools.
+[`crawlers.json`](crawlers.json) contains the same list as the table above (token, operator, kind, purpose, docs URL, and `control_token`, which is `true` for tokens that are not real crawlers), for use in scripts, server rules or your own tools. `kind` is one of `training`, `search` or `user`, the same categories the [AI Crawler Checker](https://seopeck.com/tool/ai-crawler-checker) uses.
 
 ## Contributing
 
